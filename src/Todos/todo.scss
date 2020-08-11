@@ -123,4 +123,12 @@ body {
     cursor: pointer;
     display: none;
   }
+
+  &:hover {
+    background-color: #f6fbff;
+
+    .task-delete {
+      display: block;
+    }
+  }
 }
