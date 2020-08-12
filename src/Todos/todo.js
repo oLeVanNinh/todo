@@ -6,7 +6,7 @@ class Todos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [{id: 1, name: "Just for test", status: 1}],
+      list: [],
       newTask: ""
     }
 
@@ -43,23 +43,25 @@ class Todos extends Component {
 
   updateNewTask(event) {
     const newTask = event.target.value;
-    console.log(this.store);
     this.setState({ newTask: newTask });
   }
 
   addTask(event) {
+    event.preventDefault();
     const taskName = this.state.newTask;
     if (taskName === "") {
       return
     }
 
     const id = nextId();
+    const store = this.store();
     const newTask = { id: id, name: taskName, status: 0 }
+    const newTasks = [newTask, ...this.state.list]
     this.setState({
       newTask: "",
-      list: [newTask, ...this.state.list]
+      list: newTasks
     })
-    event.preventDefault();
+    store.setTasks(newTasks)
   }
 
   componentDidMount() {
@@ -74,7 +76,7 @@ class Todos extends Component {
       <div className="todos">
         <div className="task-header">
            <h1 className="times">{date}</h1>
-           <div className="tasks-count">{tasks_count > 1 ? `${tasks_count} tasks` : `${tasks_count} task`}</div>
+    <div className="tasks-count">{tasks_count} { tasks_count> 1 ? "tasks" : "task"}</div>
           <form className="task-form" onSubmit={this.addTask}>
             <input value={this.state.newTask} onChange={this.updateNewTask} className="task-input" placeholder="Add a new task..." />
           </form>
