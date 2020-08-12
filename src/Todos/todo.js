@@ -14,6 +14,8 @@ class Todos extends Component {
     this.store = this.store.bind(this);
     this.addTask = this.addTask.bind(this);
     this.updateNewTask = this.updateNewTask.bind(this);
+    this.toggleTaskStatus = this.toggleTaskStatus.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
   }
 
   store() {
@@ -48,7 +50,7 @@ class Todos extends Component {
 
   addTask(event) {
     event.preventDefault();
-    const taskName = this.state.newTask;
+    const taskName = this.state.newTask.trim();
     if (taskName === "") {
       return
     }
@@ -62,6 +64,24 @@ class Todos extends Component {
       list: newTasks
     })
     store.setTasks(newTasks)
+  }
+
+  toggleTaskStatus(event) {
+    const taskId = event.target.getAttribute('data-id');
+    const newList = this.state.list.map(task => {
+      const dupTask = task;
+      if (dupTask.id === taskId) { dupTask.status = dupTask.status === 0 ? 1 : 0 }
+      return dupTask;
+    })
+    this.setState({list: newList});
+    this.store().setTasks(newList);
+  }
+
+  deleteTask(event) {
+    const taskId = event.target.getAttribute('data-id');
+    const newList = this.state.list.filter(task => task.id !== taskId)
+    this.setState({list: newList});
+    this.store().setTasks(newList);
   }
 
   componentDidMount() {
@@ -85,9 +105,9 @@ class Todos extends Component {
           { tasks_count > 0 ? (
             tasks.map(task =>
               <div className="task-item" key={task.id}>
-                <input type="checkbox" className="task-status" data-id={task.id} />
+                <input type="checkbox" className="task-status" data-id={task.id} onChange={this.toggleTaskStatus} checked={task.status} />
                 <div className="task-name">{task.name}</div>
-                <button className="task-delete"></button>
+                <button className="task-delete" data-id={task.id} onClick={this.deleteTask}></button>
               </div>
               )
             ) : (
