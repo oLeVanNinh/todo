@@ -106,7 +106,7 @@ class Todos extends Component {
             tasks.map(task =>
               <div className="task-item" key={task.id}>
                 <input type="checkbox" className="task-status" data-id={task.id} onChange={this.toggleTaskStatus} checked={task.status} />
-                <div className="task-name">{task.name}</div>
+                <div className={"task-name" + (task.status === 1 ? " done" : "")}>{task.name}</div>
                 <button className="task-delete" data-id={task.id} onClick={this.deleteTask}></button>
               </div>
               )

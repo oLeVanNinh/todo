@@ -110,6 +110,10 @@ body {
     text-overflow: ellipsis;
   }
 
+  .done {
+    text-decoration: line-through;
+  }
+
   .task-delete {
     border: 0;
     width: 18px;
