@@ -7,7 +7,8 @@ class Todos extends Component {
     super(props);
     this.state = {
       list: [],
-      newTask: ""
+      newTask: "",
+      idPrefix: null
     }
 
     this.fetchTasks = this.fetchTasks.bind(this);
@@ -16,6 +17,7 @@ class Todos extends Component {
     this.updateNewTask = this.updateNewTask.bind(this);
     this.toggleTaskStatus = this.toggleTaskStatus.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
+    this.generateRandomString = this.generateRandomString.bind(this)
   }
 
   store() {
@@ -38,8 +40,10 @@ class Todos extends Component {
   fetchTasks() {
     const store = this.store();
     const items = store.getTasks() || [];
+    const prefix = this.state.idPrefix || this.generateRandomString(10);
     this.setState({
-      list: items
+      list: items,
+      idPrefix: prefix
     })
   }
 
@@ -55,7 +59,7 @@ class Todos extends Component {
       return
     }
 
-    const id = nextId();
+    const id = nextId(this.state.idPrefix);
     const store = this.store();
     const newTask = { id: id, name: taskName, status: 0 }
     const newTasks = [newTask, ...this.state.list]
@@ -82,6 +86,17 @@ class Todos extends Component {
     const newList = this.state.list.filter(task => task.id !== taskId)
     this.setState({list: newList});
     this.store().setTasks(newList);
+  }
+
+  generateRandomString(len) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = ""
+    for (let i =0; i < len; i++) {
+      let charIndex = Math.round(Math.random() * 62);
+      result += characters[charIndex];
+    }
+
+    return result;
   }
 
   componentDidMount() {
